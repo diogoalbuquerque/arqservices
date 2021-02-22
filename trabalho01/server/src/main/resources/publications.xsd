@@ -1,0 +1,38 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://mba.ufrj.br/find-publication"
+           targetNamespace="http://mba.ufrj.br/find-publication" elementFormDefault="qualified">
+
+    <xs:element name="getPublicationRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="title" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getPublicationResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="publications" type="tns:publication" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="publication">
+        <xs:sequence>
+            <xs:element name="id" type="xs:int"/>
+            <xs:element name="title" type="xs:string"/>
+            <xs:element name="firstPage" type="xs:int"/>
+            <xs:element name="lastPage" type="xs:int"/>
+            <xs:element name="year" type="xs:int"/>
+            <xs:element name="authors" type="tns:author" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="author">
+        <xs:sequence>
+            <xs:element name="id" type="xs:int"/>
+            <xs:element name="cpf" type="xs:string"/>
+            <xs:element name="name" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

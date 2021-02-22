@@ -1,0 +1,627 @@
+:revnumber: 1.0
+:revdate: 21-02-2021
+:encoding: utf-8
+:lang: pt-br
+:experimental:
+:toc:
+:toc-title: Sumário
+:toclevels: 4
+:imagesdir: extras/img/
+:doctype: book
+:icons: font
+:source-highlighter: rouge
+:chapter-label:
+:figure-caption:
+:tip-caption: :bulb:
+:example-caption:
+:numbered:
+
+= Trabalho 01 - Engsoft 036
+
+
+|===
+|Participantes
+
+|Arthur Reis
+
+|Diogo Albuquerque
+
+|Felipe Veloso
+
+|Gustavo Bianco
+
+|Marcio Grey
+
+|Vitor Sampaio
+
+|===
+
+
+== Conceitual
+
+=== Questão 01
+
+Defina Arquitetura Orientada a Serviços baseado em referência bibliográfica da literatura (por exemplo, artigo científico ou livro).
+Inclua a referência bibliográfica na sua resposta.
+
+.Resposta
+====
+SOA é uma abordagem em que vários serviços colaboram para fornecer um conjunto de funcionalidades.
+Neste caso, o serviço significa um processo de sistema operacional completamente separado.
+A comunicação entre esses serviços ocorre por meio de um protocolo, uma vez que estão fisicamente separados.
+
+A grande vantagem é combater os aplicativos monolíticos, visto que promove a reutilização do software através das distribuição das responsabilidades.
+====
+
+[verse,Sam Newman]
+Building Microservices
+
+=== Questão 02
+
+Defina serviço baseado em referência bibliográfica da literatura (por exemplo, artigo científico ou livro).
+Inclua a referência bibliográfica na sua resposta.
+
+.Resposta
+====
+Serviço é uma parte de software capaz de entregar a funcionalidade para o usuário final.
+Ele deve ser pequeno, e com o foco em fazer algo de uma maneira ótima, e ser independente de outros serviços.
+
+====
+
+[verse,Sam Newman]
+Building Microservices
+
+=== Questão 03
+
+Defina serviço SOAP.
+
+.Resposta
+====
+Serviço SOAP, é um serviço que utiliza o protocolo SOAP para se comunciar.
+Através do SOAP esse serviço pode se comunicar com outros serviços de diferentes linguagens.
+A comunicação recebida através de mensagens SOAP, utiliza como base uma linguagem de marcação xml.
+
+É uma linguagem que pode ser interpretada pelo serviço, navegador, mas bastante verbosa.
+
+====
+
+== Prática
+
+=== Modularização
+
+Optamos por utilizar uma modularização baseada em clean architeture direcionada a dominios e que se adapte ao modelo hexagonal, mesmo as vezes faltando um pouco de coesão nos pacotes.
+
+==== Serviço
+
+.Modularização do serviço
+image::server-module.png[Serviço]
+
+==== Cliente
+
+.Modularização do cliente
+image::client-module.png[Cliente]
+
+=== Estrutura de dados
+
+.Estrutura de dados
+image::estrutura.png[Esturutra]
+
+=== Implementação
+
+==== Serviço
+
+O serviço foi implementado usando JAVA e o framework Spring Boot.
+
+Utilizamos as seguintes dependências:
+
+- spring-boot-starter-data-jpa;
+- spring-boot-starter-web;
+- spring-boot-starter-web-services.
+
+Para persitência dos dados utilizamos o H2.
+
+Primeiramente fizemos o mapeamento das classes, implementamos o repositório com o JPA e criamos o serviço.
+
+Para o mapeamento criamos o seguinte arquivo xsd.
+
+.publication.xsd
+[source,xml]
+----
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://mba.ufrj.br/find-publication"
+           targetNamespace="http://mba.ufrj.br/find-publication" elementFormDefault="qualified">
+
+    <xs:element name="getPublicationRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="title" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getPublicationResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="publications" type="tns:publication" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="publication">
+        <xs:sequence>
+            <xs:element name="id" type="xs:int"/>
+            <xs:element name="title" type="xs:string"/>
+            <xs:element name="firstPage" type="xs:int"/>
+            <xs:element name="lastPage" type="xs:int"/>
+            <xs:element name="year" type="xs:int"/>
+            <xs:element name="authors" type="tns:author" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="author">
+        <xs:sequence>
+            <xs:element name="id" type="xs:int"/>
+            <xs:element name="cpf" type="xs:string"/>
+            <xs:element name="name" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
+----
+
+==== Cliente
+
+O cliente foi implementado usando GO.
+
+O projeto consiste em uma aplicação CLI onde você informa o título da publicação e ele consulta o serviço, imprimindo na própria console.
+
+Utilizamos a seguinte dependências:
+
+- github.com/hooklift/gowsdl.
+
+=== Código
+
+==== Serviço
+
+.GetPublicationRequest.java
+[source,java]
+----
+package br.ufrj.mba.server.application.request;
+
+import javax.xml.bind.annotation.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(
+    name = "",
+    propOrder = {"title"})
+@XmlRootElement(name = "getPublicationRequest")
+public class GetPublicationRequest {
+
+  @XmlElement(required = true)
+  protected String title;
+}
+----
+
+.GetPublicationRequest.java
+[source,java]
+----
+package br.ufrj.mba.server.application.response;
+
+import br.ufrj.mba.server.domain.publication.Publication;
+import java.util.List;
+import javax.xml.bind.annotation.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(
+    name = "",
+    propOrder = {"publications"})
+@XmlRootElement(name = "getPublicationResponse")
+public class GetPublicationResponse {
+
+  @XmlElement(required = true)
+  protected List<Publication> publications;
+}
+
+----
+
+.PublicationRepository.java
+[source,java]
+----
+package br.ufrj.mba.server.domain.publication.repository;
+
+import br.ufrj.mba.server.domain.publication.Publication;
+import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface PublicationRepository extends JpaRepository<Publication, Integer> {
+  /**
+   * Procurar as publicações que contenham a palavra no título ignorando o case.
+   *
+   * @param title Título da publicação que deseja encontrar.
+   */
+  List<Publication> findAllByTitleContainsIgnoreCase(String title);
+}
+----
+
+.PublicationEndpoint.java
+[source,java]
+----
+package br.ufrj.mba.server.domain.publication.service;
+
+import br.ufrj.mba.server.application.request.GetPublicationRequest;
+import br.ufrj.mba.server.application.response.GetPublicationResponse;
+import br.ufrj.mba.server.domain.publication.repository.PublicationRepository;
+import java.util.Objects;
+import lombok.RequiredArgsConstructor;
+import org.springframework.ws.server.endpoint.annotation.Endpoint;
+import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
+import org.springframework.ws.server.endpoint.annotation.RequestPayload;
+import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
+
+@Endpoint
+@RequiredArgsConstructor
+public class PublicationEndpoint {
+  private static final String NAMESPACE_URI = "http://mba.ufrj.br/find-publication";
+  private final PublicationRepository publicationRepository;
+
+  /**
+   * Endpoint que recebe o request, procura na base de dados e efetua a resposta.
+   *
+   * @param request Objeto que contém o envelope soap com a propriedade title.
+   */
+  @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getPublicationRequest")
+  @ResponsePayload
+  public GetPublicationResponse getPublication(@RequestPayload GetPublicationRequest request) {
+    GetPublicationResponse response = new GetPublicationResponse();
+
+    if (Objects.nonNull(request.getTitle()) && request.getTitle().trim().length() > 0) {
+      response.setPublications(
+          publicationRepository.findAllByTitleContainsIgnoreCase(request.getTitle()));
+    }
+
+    return response;
+  }
+}
+----
+
+.Author.java
+[source,java]
+----
+package br.ufrj.mba.server.domain.publication;
+
+import javax.persistence.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@Table(name = "AUTHOR")
+@Getter
+@Setter
+@NoArgsConstructor
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(
+    name = "author",
+    propOrder = {"id", "cpf", "name"})
+public class Author {
+
+  @Id
+  @Column(name = "ID_AUTHOR")
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private int id;
+
+  @Column(name = "CPF")
+  @XmlElement(required = true)
+  private final String cpf;
+
+  @Column(name = "NAME")
+  @XmlElement(required = true)
+  private final String name;
+
+  public Author(String cpf, String name) {
+    this.cpf = cpf;
+    this.name = name;
+  }
+}
+----
+
+.Publication.java
+[source,java]
+----
+package br.ufrj.mba.server.domain.publication;
+
+import java.util.Set;
+import javax.persistence.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@Table(name = "PUBLICATION")
+@Getter
+@Setter
+@NoArgsConstructor
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(
+    name = "publication",
+    propOrder = {"id", "title", "firstPage", "lastPage", "year", "authors"})
+public class Publication {
+
+  @Id
+  @Column(name = "ID_PUBLICATION")
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private int id;
+
+  @Column(name = "TITLE")
+  @XmlElement(required = true)
+  private String title;
+
+  @Column(name = "FIRST_PAGE")
+  @XmlElement(required = true)
+  private int firstPage;
+
+  @Column(name = "LAST_PAGE")
+  @XmlElement(required = true)
+  private int lastPage;
+
+  @Column(name = "YEAR")
+  @XmlElement(required = true)
+  private int year;
+
+  @XmlElement(required = true)
+  @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+  @JoinTable(
+      name = "PUBLICATION_AUTHOR",
+      joinColumns = {@JoinColumn(name = "ID_PUBLICATION", nullable = false, updatable = false)},
+      inverseJoinColumns = {@JoinColumn(name = "ID_AUTHOR", nullable = false, updatable = false)})
+  private Set<Author> authors;
+}
+----
+
+.WebServiceConfig.java
+[source,java]
+----
+package br.ufrj.mba.server.infraestructure.configuration;
+
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.ws.config.annotation.EnableWs;
+import org.springframework.ws.config.annotation.WsConfigurerAdapter;
+import org.springframework.ws.transport.http.MessageDispatcherServlet;
+import org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition;
+import org.springframework.xml.xsd.SimpleXsdSchema;
+import org.springframework.xml.xsd.XsdSchema;
+
+@EnableWs
+@Configuration
+public class WebServiceConfig extends WsConfigurerAdapter {
+  /**
+   * Registra o Servlet no container. Como o nome já diz efetua o registro do servlet no contexto da
+   * aplicação.
+   *
+   * @param applicationContext Contexto da aplicação.
+   */
+  @Bean
+  public ServletRegistrationBean<MessageDispatcherServlet> messageDispatcherServlet(
+      ApplicationContext applicationContext) {
+    MessageDispatcherServlet servlet = new MessageDispatcherServlet();
+    servlet.setApplicationContext(applicationContext);
+    servlet.setTransformWsdlLocations(true);
+    return new ServletRegistrationBean<>(servlet, "/ws/*");
+  }
+
+  /**
+   * Implementação que facilita a criação de serviços SOAP 1.1 e 1.2, fazendo o bind através de
+   * convenções tendo como base arquivos xsd.
+   *
+   * @param publicationsSchema Esquema xsd que será utilizado para a implementação.
+   */
+  @Bean(name = "publications")
+  public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema publicationsSchema) {
+    DefaultWsdl11Definition wsdl11Definition = new DefaultWsdl11Definition();
+    wsdl11Definition.setPortTypeName("PublicationsPort");
+    wsdl11Definition.setLocationUri("/ws");
+    wsdl11Definition.setTargetNamespace("http://mba.ufrj.br/find-publication");
+    wsdl11Definition.setSchema(publicationsSchema);
+    return wsdl11Definition;
+  }
+
+  @Bean
+  public XsdSchema publicationsSchema() {
+    return new SimpleXsdSchema(new ClassPathResource("publications.xsd"));
+  }
+}
+----
+
+==== Cliente
+
+.publicationService.go
+[source,go]
+----
+package service
+
+import (
+	"context"
+	"encoding/xml"
+	"github.com/hooklift/gowsdl/soap"
+	"time"
+)
+
+var _ time.Time
+var _ xml.Name
+
+type AnyType struct {
+	InnerXML string `xml:",innerxml"`
+}
+
+type AnyURI string
+
+type NCName string
+
+// * Struct que representa o request da publicação
+type GetPublicationRequest struct {
+	XMLName xml.Name `xml:"http://mba.ufrj.br/find-publication getPublicationRequest"`
+
+	Title string `xml:"title,omitempty" json:"title,omitempty"`
+}
+
+// * Struct que representa o response da publicação
+type GetPublicationResponse struct {
+	XMLName xml.Name `xml:"http://mba.ufrj.br/find-publication getPublicationResponse"`
+
+	Publication []*Publication `xml:"publications,omitempty" json:"publications,omitempty"`
+}
+
+// * Struct que representa a publicação
+type Publication struct {
+	XMLName xml.Name `xml:"http://mba.ufrj.br/find-publication publications"`
+
+	Id int32 `xml:"id,omitempty" json:"id,omitempty"`
+
+	Title string `xml:"title,omitempty" json:"title,omitempty"`
+
+	FirstPage int32 `xml:"firstPage,omitempty" json:"firstPage,omitempty"`
+
+	LastPage int32 `xml:"lastPage,omitempty" json:"lastPage,omitempty"`
+
+	Year int32 `xml:"year,omitempty" json:"year,omitempty"`
+
+	Authors []*Author `xml:"authors,omitempty" json:"authors,omitempty"`
+}
+
+// * Struct que representa o autor
+type Author struct {
+	XMLName xml.Name `xml:"authors"`
+
+	Id int32 `xml:"id,omitempty" json:"id,omitempty"`
+
+	Cpf string `xml:"cpf,omitempty" json:"cpf,omitempty"`
+
+	Name string `xml:"name,omitempty" json:"name,omitempty"`
+}
+
+// Funcões que serão utilizadas para através de uma Struct de request, retornar uma Struct de response.
+type PublicationsPort interface {
+	GetPublication(request *GetPublicationRequest) (*GetPublicationResponse, error)
+
+	GetPublicationContext(ctx context.Context, request *GetPublicationRequest) (*GetPublicationResponse, error)
+}
+
+type publicationsPort struct {
+	client *soap.Client
+}
+
+func NewPublicationsPort(client *soap.Client) PublicationsPort {
+	return &publicationsPort{
+		client: client,
+	}
+}
+
+// Metodo principal, responsável por através da biblioteca gowsdl, enviar o request e receber o response.
+// Uma vez que o contexto não é definido ele usa o contexto em background padrão, um contexto que nunca é cancelado, e nao tem deadline.
+// Para que uma ação sai da aplicação e va aguardar a resposta, é necessário definir um contexto.
+func (service *publicationsPort) GetPublicationContext(ctx context.Context, request *GetPublicationRequest) (*GetPublicationResponse, error) {
+	response := new(GetPublicationResponse)
+	err := service.client.CallContext(ctx, "''", request, response)
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}
+
+func (service *publicationsPort) GetPublication(request *GetPublicationRequest) (*GetPublicationResponse, error) {
+	return service.GetPublicationContext(
+		context.Background(),
+		request,
+	)
+}
+----
+
+.main.go
+[source,go]
+----
+package main
+
+import (
+	publicationService "br.ufrj.mba.client/domain/publication/service"
+	"fmt"
+	"github.com/hooklift/gowsdl/soap"
+	"log"
+	"os"
+)
+
+func main() {
+	argsWithoutProg := os.Args[1:]
+
+	// Definindo endereço do serviço
+	client := soap.NewClient("http://localhost:8080/ws/publications.wsdl")
+	service := publicationService.NewPublicationsPort(client)
+
+	// Iterando sobre os argumentos passados por linha de comando
+	for i, title := range argsWithoutProg {
+		response, err := service.GetPublication(&publicationService.GetPublicationRequest{
+			Title: title,
+		})
+		if err != nil {
+			log.Fatalf("An error has occurred: %v", err)
+		}
+
+		if response.Publication == nil {
+			fmt.Printf("No publications found for the title: %v\n", title)
+		} else {
+			fmt.Printf("========== RESULT (%v) FOR (%v) ==========\n", i+1, title)
+			printResponse(*response)
+			fmt.Println("============================================")
+		}
+	}
+
+}
+
+// Funcão de impressão do resultado
+func printResponse(response publicationService.GetPublicationResponse) {
+	for _, publication := range response.Publication {
+		fmt.Printf("\nID: \t\t%v\nTITLE: \t\t%v\nFIRST PAGE: \t%v\nLAST PAGE:\t%v\nYEAR: \t\t%v\n", publication.Id, publication.Title, publication.FirstPage, publication.LastPage, publication.Year)
+		for _, author := range publication.Authors {
+			fmt.Printf("\tID: \t\t%v\n\tCPF: \t\t%v\n\tNAME\t\t%v\n\n", author.Id, author.Cpf, author.Name)
+		}
+	}
+}
+
+----
+
+=== Funcionamento
+
+==== Servidor
+.WSDL do serviço
+image::server.png[Server]
+
+==== Cliente
+.Procurando pelas publicação que o título contenha arch
+image::finding arch.png[Server]
+
+.Procurando pelas publicação que o título contenha a
+image::finding a.png[Server]
