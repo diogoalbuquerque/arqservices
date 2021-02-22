@@ -1,0 +1,35 @@
+version: '3.8'
+
+networks:
+  frontend:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+services:
+  server:
+    container_name: server
+    restart: on-failure
+    image: openjdk:15.0.2-jdk-oraclelinux7
+    ports:
+      - "8080:8080"
+    networks:
+      frontend:
+        ipv4_address: 172.20.0.2
+    command: >
+      bash -c "yum install wget -y
+      && wget https://github.com/diogoalbuquerque/arqservices/releases/download/1.0.0/server.jar
+      && java -jar server.jar"
+  client:
+    container_name: client
+    restart: on-failure
+    image: openjdk:15.0.2-jdk-oraclelinux7
+    networks:
+      frontend:
+        ipv4_address: 172.20.0.3
+    depends_on:
+      - "server"
+    command: >
+      bash -c "yum install wget -y
+      && wget https://github.com/diogoalbuquerque/arqservices/releases/download/1.0.0/client-linux-amd64-docker
+      && chmod 777 client-linux-amd64-docker
+      &&./client-linux-amd64-docker archi a"
