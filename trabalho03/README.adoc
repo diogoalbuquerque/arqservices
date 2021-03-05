@@ -1,0 +1,707 @@
+:revnumber: 1.0
+:revdate: 05-03-2021
+:encoding: utf-8
+:lang: pt-br
+:experimental:
+:toc:
+:toc-title: Sumário
+:toclevels: 4
+:imagesdir: extras/img/
+:doctype: book
+:icons: font
+:source-highlighter: rouge
+:chapter-label:
+:figure-caption:
+:tip-caption: :bulb:
+:example-caption:
+:numbered:
+
+= Trabalho 03 - Engsoft 036
+
+|===
+|Participantes
+
+|Arthur Reis
+
+|Diogo Albuquerque
+
+|Felipe Veloso
+
+|Gustavo Bianco
+
+|Marcio Grey
+
+|Vitor Sampaio
+
+|===
+
+== Conceitual
+
+=== Questão 01
+
+Defina especificação OpenAPI.
+
+.Resposta
+====
+A especificação OpenAPI (OAS) define uma interface padrão independente de linguagem para APIs HTTP que permite que humanos e computadores descubram e entendam os recursos do serviço sem acesso ao código-fonte, documentação ou por meio de inspeção de tráfego de rede.
+
+====
+
+[verse,http://spec.openapis.org/oas/v3.1.0]
+OPENAPI INITIATIVE
+
+=== Questão 02
+
+Qual a vantagem de se especificar o contrato de um serviço?
+
+.Resposta
+====
+Permite que o usuário possa entender e interagir com o serviço sem ter que implementar um grande quantidade de lógica.
+
+Permite também a geração de documentações, ferramentas de geração de código e geração de clientes em diversas linguagens.
+
+====
+
+[verse,http://spec.openapis.org/oas/v3.1.0]
+OPENAPI INITIATIVE
+
+== Prática
+
+=== Passos utilizados
+
+- Definições gerais do contrato (INFO);
+- Criação dos móduglos da APIT (TAGS);
+- Especificação dos endpoints (PATHS);
+- Criação dos esquemas de dados (COMPONENTS/SCHEMAS).
+
+==== API
+
+==== YAML
+
+.specification.yaml
+[source,yaml]
+----
+openapi: 3.0.1
+info:
+  title: API RH
+  description: 'Human Resources Server'
+  version: 1.0.0
+servers:
+- url: http://localhost:5000/
+tags:
+- name: person
+  description: Information about our human resources
+- name: address
+  description: Find all information about registered addresses
+paths:
+  /people:
+    get:
+      tags:
+      - person
+      summary: Retrieves all registers of person
+      description: Returns all people
+      parameters: []
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Person'
+    post:
+      tags:
+      - person
+      summary: Add a new person
+      requestBody:
+        description: Person object that will be created
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonRequest'
+        required: true
+      responses:
+        201:
+          description: Person created
+        400:
+          description: Invalid parameter supplied
+          content: {}
+  /people/{personId}:
+    put:
+      tags:
+      - person
+      summary: Update an existing person
+      operationId: updatePerson
+      parameters:
+      - name: personId
+        in: path
+        description: Person id to update
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        description: Person object that needs to be changed
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonRequest'
+        required: true
+      responses:
+        400:
+          description: Invalid ID supplied
+          content: {}
+        404:
+          description: Person not found
+          content: {}
+    delete:
+      tags:
+      - person
+      summary: Delete a person
+      operationId: deletePerson
+      parameters:
+      - name: personId
+        in: path
+        description: Person id to delete
+        required: true
+        schema:
+          type: integer
+      responses:
+        400:
+          description: Invalid ID supplied
+          content: {}
+        404:
+          description: Person not found
+          content: {}
+  /people/{cpf}:
+    get:
+      tags:
+      - person
+      summary: Find person by CPF
+      description: Returns a single person
+      operationId: getPersonByCpf
+      parameters:
+      - name: cpf
+        in: path
+        description: CPF of person to return
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Person'
+        400:
+          description: Invalid CPF supplied
+          content: {}
+        404:
+          description: Person not found
+          content: {}
+  /addresses:
+    get:
+      tags:
+      - address
+      summary: Retrieves all registers of address
+      description: Returns all addresses
+      parameters: []
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Address'
+components:
+  schemas:
+    City:
+      type: object
+      properties:
+        id:
+          type: integer
+        acronym:
+          type: string
+          example: SH
+        name:
+          type: string
+          example: South Haven
+    State:
+      type: object
+      properties:
+        id:
+          type: integer
+        acronym:
+          type: string
+          example: MI
+        name:
+          type: string
+          example: Michigan
+    Country:
+      type: object
+      properties:
+        id:
+          type: integer
+        acronym:
+          type: string
+          example: USA
+        name:
+          type: string
+          example: United States of America
+    Address:
+      required:
+        - zip_code
+        - street
+        - number
+      type: object
+      properties:
+        id:
+          type: integer
+        zip_code:
+          type: string
+          example: 4909-0
+        street:
+          type: string
+          example: Maple Street
+        number:
+          type: integer
+          example: 711
+        additional:
+          type: string
+          example: Nice little house
+        city:
+          $ref: '#/components/schemas/City'
+        state:
+          $ref: '#/components/schemas/State'
+        country:
+          $ref: '#/components/schemas/Country'
+    Person:
+      required:
+        - name
+        - cpf
+        - birth_date
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        cpf:
+          type: string
+        birth_date:
+          type: string
+        address:
+          $ref: '#/components/schemas/Address'
+    PersonRequest:
+      required:
+        - name
+        - cpf
+        - birth_date
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        cpf:
+          type: string
+        birth_date:
+          type: string
+
+----
+
+==== JSON
+
+.specification.json
+[source,json]
+----
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "API RH",
+    "description": "Human Resources Server",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "person",
+      "description": "Information about our human resources"
+    },
+    {
+      "name": "address",
+      "description": "Find all information about registered addresses"
+    }
+  ],
+  "paths": {
+    "/people": {
+      "get": {
+        "tags": [
+          "person"
+        ],
+        "summary": "Retrieves all registers of person",
+        "description": "Returns all people",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Person"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "person"
+        ],
+        "summary": "Add a new person",
+        "requestBody": {
+          "description": "Person object that will be created",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PersonRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Person created"
+          },
+          "400": {
+            "description": "Invalid parameter supplied",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/people/{personId}": {
+      "put": {
+        "tags": [
+          "person"
+        ],
+        "summary": "Update an existing person",
+        "operationId": "updatePerson",
+        "parameters": [
+          {
+            "name": "personId",
+            "in": "path",
+            "description": "Person id to update",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Person object that needs to be changed",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PersonRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Person not found",
+            "content": {}
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "person"
+        ],
+        "summary": "Delete a person",
+        "operationId": "deletePerson",
+        "parameters": [
+          {
+            "name": "personId",
+            "in": "path",
+            "description": "Person id to delete",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid ID supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Person not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/people/{cpf}": {
+      "get": {
+        "tags": [
+          "person"
+        ],
+        "summary": "Find person by CPF",
+        "description": "Returns a single person",
+        "operationId": "getPersonByCpf",
+        "parameters": [
+          {
+            "name": "cpf",
+            "in": "path",
+            "description": "CPF of person to return",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Person"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid CPF supplied",
+            "content": {}
+          },
+          "404": {
+            "description": "Person not found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/addresses": {
+      "get": {
+        "tags": [
+          "address"
+        ],
+        "summary": "Retrieves all registers of address",
+        "description": "Returns all addresses",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Address"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "City": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "acronym": {
+            "type": "string",
+            "example": "SH"
+          },
+          "name": {
+            "type": "string",
+            "example": "South Haven"
+          }
+        }
+      },
+      "State": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "acronym": {
+            "type": "string",
+            "example": "MI"
+          },
+          "name": {
+            "type": "string",
+            "example": "Michigan"
+          }
+        }
+      },
+      "Country": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "acronym": {
+            "type": "string",
+            "example": "USA"
+          },
+          "name": {
+            "type": "string",
+            "example": "United States of America"
+          }
+        }
+      },
+      "Address": {
+        "required": [
+          "zip_code",
+          "street",
+          "number"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "zip_code": {
+            "type": "string",
+            "example": "4909-0"
+          },
+          "street": {
+            "type": "string",
+            "example": "Maple Street"
+          },
+          "number": {
+            "type": "integer",
+            "example": 711
+          },
+          "additional": {
+            "type": "string",
+            "example": "Nice little house"
+          },
+          "city": {
+            "$ref": "#/components/schemas/City"
+          },
+          "state": {
+            "$ref": "#/components/schemas/State"
+          },
+          "country": {
+            "$ref": "#/components/schemas/Country"
+          }
+        }
+      },
+      "Person": {
+        "required": [
+          "name",
+          "cpf",
+          "birth_date"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "cpf": {
+            "type": "string"
+          },
+          "birth_date": {
+            "type": "string"
+          },
+          "address": {
+            "$ref": "#/components/schemas/Address"
+          }
+        }
+      },
+      "PersonRequest": {
+        "required": [
+          "name",
+          "cpf",
+          "birth_date"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "cpf": {
+            "type": "string"
+          },
+          "birth_date": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
+----
+
+=== Swagger Editor
+
+==== Endpoints
+
+.Endpoints
+image::swagger-specification.png[Endpoints]
+
+==== Schemas
+
+.Schemas
+image::schemas.png[Schemas]
+
+.City
+image::city.png[City]
+
+.Address
+image::address.png[Address]
+
+.Person
+image::person.png[Person]
+
+.Request
+image::request.png[Request]
+
+==== Editor
+
+.Get People
+image::getpeople1.png[Get People]
+
+.Get People
+image::getpeople2.png[Get People]
+
+.Get People CPF
+image::getpeoplecpf1.png[Get People CPF]
+
+.Get People CPF
+image::getpeoplecpf2.png[Get People CPF]
