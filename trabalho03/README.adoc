@@ -82,11 +82,11 @@ para que possam ser reutilizados pelos responses dos paths.
 Como vimos em alguns exemplos é comum utilizar schemas para padronizar o response e evitar escrita duplicada.
 
 ==== Passo 04
-Com os schemas definidos, ficou simples
-escrever nossos paths. Nos baseamos na API que estava previamente definida e então fizemos as referências entre os
-responses dos paths com os schemas.
 
-==== API
+Com os schemas definidos, ficou simples escrever nossos paths.
+Nos baseamos na API que estava previamente definida e então fizemos as referências entre os responses dos paths com os schemas.
+
+=== API
 
 ==== YAML
 
