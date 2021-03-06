@@ -69,10 +69,22 @@ OPENAPI INITIATIVE
 
 === Passos utilizados
 
-- Definições gerais do contrato (INFO);
-- Criação dos móduglos da APIT (TAGS);
-- Especificação dos endpoints (PATHS);
-- Criação dos esquemas de dados (COMPONENTS/SCHEMAS).
+==== Passo 01
+Criação do header principal e análise contratos de exemplo para que possamos criar nosso contrato no Swagger editor;
+
+==== Passo 02
+Criação das propriedades info e tags para que nosso contrato fique personalizado e apresente sua finaldiade;
+
+==== Passo 03
+Resolvemos então definir as propriedades de nossos schemas,
+para que possam ser reutilizados pelos responses dos paths.
+
+Como vimos em alguns exemplos é comum utilizar schemas para padronizar o response e evitar escrita duplicada.
+
+==== Passo 04
+Com os schemas definidos, ficou simples
+escrever nossos paths. Nos baseamos na API que estava previamente definida e então fizemos as referências entre os
+responses dos paths com os schemas.
 
 ==== API
 
