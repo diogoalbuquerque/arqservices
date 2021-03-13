@@ -1,0 +1,358 @@
+:revnumber: 1.0
+:revdate: 14-03-2021
+:encoding: utf-8
+:lang: pt-br
+:experimental:
+:toc:
+:toc-title: Sumário
+:toclevels: 4
+:imagesdir: extras/img/
+:doctype: book
+:icons: font
+:source-highlighter: rouge
+:chapter-label:
+:figure-caption:
+:tip-caption: :bulb:
+:example-caption:
+:numbered:
+
+= Trabalho 04 - Engsoft 036
+
+|===
+|Participantes
+
+|Arthur Reis
+
+|Diogo Albuquerque
+
+|Felipe Veloso
+
+|Gustavo Bianco
+
+|Marcio Grey
+
+|Vitor Sampaio
+
+|===
+
+== Conceitual
+
+=== Questão 01
+
+Defina ciclo de vida de desenvolvimento de software baseado em referência bibliográfica da literatura (por exemplo, artigo científico ou livro).
+
+Inclua a referência bibliográfica na sua resposta.
+
+.Resposta
+====
+?
+
+====
+
+[verse,http://spec.openapis.org/oas/v3.1.0]
+OPENAPI INITIATIVE
+
+=== Questão 02
+
+Por que é importante utilizar um ciclo de vida para desenvolvimento de software em um projeto?
+
+.Resposta
+====
+?
+
+====
+
+[verse,http://spec.openapis.org/oas/v3.1.0]
+OPENAPI INITIATIVE
+
+=== Questão 03
+
+Segundo Gu & Lago [1], o que significa dividir o ciclo de vida de desenvolvimento de software em estágios e por que é importante fazer esta divisão?
+
+.Resposta
+====
+?
+
+====
+
+[verse,http://spec.openapis.org/oas/v3.1.0]
+OPENAPI INITIATIVE
+
+=== Questão 04
+
+Considerando o ciclo de vida orientado a stakeholders [1], defina: (a) provedor de serviço; (b)broker(ou registro de serviços); (c)provedor de aplicação / consumidor de serviço.
+
+Em particular, detalhe o último stakeholder explicando como/quando ele atua provedor de aplicação e quando ele atua como consumidor de serviço.
+
+Apresente exemplos de tarefas que este stakeholder executa quando assume cada um destes dois papéis.
+
+.Resposta
+====
+?
+
+====
+
+[verse,http://spec.openapis.org/oas/v3.1.0]
+OPENAPI INITIATIVE
+
+=== Questão 05
+
+De acordo com Josuttis (2007) [2], defina serviço básico de dados, serviço básico de lógica, serviço composto e serviço de processo.
+
+.Resposta
+====
+?
+
+====
+
+[verse,http://spec.openapis.org/oas/v3.1.0]
+OPENAPI INITIATIVE
+
+== Prática
+
+=== Diagrama
+
+.Diagrama BPMN
+image::lv.png[Diagrama BPMN]
+
+=== Passos
+
+|===
+|Passo | Ator | Ação | Tipo | Provedor | Consumidor
+
+|Solicitar compra de livros. | Cliente. | Interação com usuário. |  |  |
+
+|Solicitar preenchimento de informações. | Loja virtual. | Interação com usuário. |  |  |
+
+|Preencher informações. | Cliente. | Interação com usuário. |  |  |
+
+|Listar livrarias por assunto. | Loja virtual. | Serviço de consulta de banco de dados. | Invocação. | Loja virtual. | Loja virtual.
+
+|Listar todas as livrarias. | Loja virtual. | Serviço de consulta de banco de dados. | Invocação. | Loja virtual. | Loja virtual.
+
+|Consultar informações do livro. | Livrarias. | Serviço. | Invocação. | Livrarias. | Loja virtual.
+
+|Enviar informações do livro. | Livrarias. | Serviço. | Processamento. | Livrarias. | Loja virtual.
+
+|Receber informações do livro. | Loja virtual. | Serviço. | Receber retorno. | Loja virtual. | Loja virtual.
+
+|Exibir dados. | Loja virtual. | Interação com usuário. |  |  |
+
+|Selecionar livraria. | Cliente. | Interação com usuário. |  |  |
+
+|Preencher informações pessoais. | Cliente. | Interação com usuário. |  |  |
+
+|Enviar informações pessoais do cliente. | Loja virtual | Interação com usuário. |  |  |
+
+|Validar informações pessoas do cliente. | Livrarias. | Interação com usuário. |  |  |
+
+|Calcular entrega. | Livrarias. | Serviço. | Invocação. | Livrarias. | Livrarias.
+
+|Enviar informações de entrega. | Livrarias. | Serviço. | Receber retorno. | Livrarias. | Loja virtual.
+
+|Enviar opções de pagamento. | Loja virtual | Interação com usuário. |  |  |
+
+|Escolher opção de pagamento. | Cliente. | Interação com usuário. |  |  |
+
+|Solicitar informações de pagamento. | Loja virtual. | Interação com usuário. |  |  |
+
+|Preencher informações de pagamento. | Cliente. | Interação com usuário. |  |  |
+
+|Enviar dados para operadora. | Loja virtual. | Serviço. | Invocação. | Operadora do cartão. | Loja virtual.
+
+|Validar pagamento. | Operadora do cartão. | Serviço. | Processamento .| Operadora do cartão. | Operadora do cartão.
+
+|Informar pagamento. | Loja virtual. | Interação com usuário. |  |  |
+
+|Enviar informações do livro a ser entregue. | Livrarias. | Interação com usuário. |  |  |
+
+|Enviar custo para livraria. | Transportadora. | Interação com usuário. |  |  |
+
+|Entregar livro. | Transportadora. | Interação com usuário. |  |  |
+
+|Receber livro. | Cliente. | Interação com usuário. |  |  |
+
+|Informar entrega do livro para livraria. | Transportadora. | Interação com usuário. |  |  |
+
+|Informar entrega do livro para loja virtual. | Livrarias .| Interação com usuário. |  |  |
+
+|Enviar pesquisa de satisfação. | Loja virtual. | Interação com usuário .|  |  |
+
+|Receber pesquisa de satisfação. | Cliente. | Interação com usuário .|  |  |
+|===
+
+=== Identificação dos serviços
+
+==== Loja virtual service (assunto)
+
+|===
+| Nome | Loja Virtual Service (assunto).
+
+| Provedor | Livraria.
+
+| Nome | Listar livros por assunto.
+
+| Passos | Solicitar informações do livro.
+
+| Entrada |
+
+|  | Título.
+|  | Ano.
+|  | Nomes do autores.
+|  | ISBN.
+|  | Editora.
+|  | Assunto.
+
+| Saída |
+|  | Estoque.
+|  | Preço.
+|  | Prazo mínimo de entrega.
+
+| Descrição da operação | Consulta as informações do livro na livraria por assunto.
+
+| Tipo do serviço | Básico.
+
+| Dados ou lógica | Dados.
+
+|===
+
+==== Loja virtual service (livrarias)
+
+|===
+| Nome | Loja Virtual Service (livrarias).
+
+| Provedor | Livraria.
+
+| Nome | Listar livros.
+
+| Passos | Solicitar informações do livro.
+
+| Entrada |
+|  | Título.
+|  | Ano.
+|  | Nomes do autores.
+|  | ISBN.
+|  | Editora.
+
+| Saída |
+|  | Estoque.
+|  | Preço.
+|  | Prazo mínimo de entrega.
+
+| Descrição da operação | Consulta as informações do livro na livraria.
+
+| Tipo do serviço | Básico.
+
+| Dados ou lógica | Dados.
+
+|===
+
+==== Livrarias service (detalhe)
+
+|===
+| Nome | Livrarias Service (detalhe).
+
+| Provedor | Livraria.
+
+| Nome | Detalhes do livro.
+
+| Passos | Consultar informações do livro.
+
+| Entrada |
+|  | Título.
+|  | Ano.
+|  | Nomes do autores.
+|  | ISBN.
+|  | Editora.
+
+| Saída |
+|  | Informações do livro.
+|  | Possui no estoque.
+
+| Descrição da operação | Consulta detalhes do livro na livraria.
+
+| Tipo do serviço | Básico.
+
+| Dados ou lógica | Dados.
+
+|===
+
+==== Loja virtual service (consolidar)
+
+|===
+| Nome | Loja Virtual Service (consolidar).
+
+| Provedor | Loja virtual.
+
+| Nome | Consolidar informações.
+
+| Passos | Receber informações do livro.
+
+| Entrada |
+|  | Informações do livro.
+
+| Saída |
+|  | Informações consolidadas do livro de todas livrarias.
+
+| Descrição da operação | Consolidar as informações de todas as livrarias para apresentar para o cliente.
+
+| Tipo do serviço | Processo.
+
+| Dados ou lógica | Lógica.
+
+|===
+
+==== Livrarias service (entrega)
+
+|===
+| Nome | Livrarias Service (entrega).
+
+| Provedor | Livrarias.
+
+| Nome | Calcular entrega.
+
+| Passos | Calcular entrega.
+|  | Enviar informações de entrega.
+
+| Entrada |
+|  | Informações pessoais.
+|  | Endereço.
+
+| Saída |
+|  | Valor efetivo do transporte.
+
+| Descrição da operação | Calcular o valor efetivo da entrega com base nas informações do cliente.
+
+| Tipo do serviço | Básico.
+
+| Dados ou lógica | Dados.
+
+|===
+
+==== Loja virtual service (pagamento)
+
+|===
+| Nome | Loja Virtual Service (pagamento).
+
+| Provedor | Loja virtual.
+
+| Nome | Validar informações de pagamento.
+
+| Passos | Enviar dados para operadora do cartão.
+
+| Entrada |
+|  | Forma de pagamento.
+|  | Informações da forma de pagamento.
+
+| Saída |
+|  | Efetivação do pagamento.
+
+| Descrição da operação | Solicitar informações do meio de pagamento e efetua a validação do mesmo.
+
+| Tipo do serviço | Básico.
+
+| Dados ou lógica | Processo.
+
+|===
+
+=== Arquitetura de microserviços
