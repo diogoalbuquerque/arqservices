@@ -45,12 +45,22 @@ Inclua a referência bibliográfica na sua resposta.
 
 .Resposta
 ====
-?
+Baseado no estudo "Comparative Study of Prototype Model For Software Engineering With System Development Life Cycle - ISSN: 2250-3021 Volume 2, Issue 7(July 2012), PP 21-24", publicado por "Rajendra Ganpatrao Sabale".
+
+Podemos dividir o termo "ciclo de vida de desenvolvimento de ‘software’", da seguinte forma: "Modelo de ciclo" aplicado ao "desenvolvimento de ‘softwares’".
+
+O modelo de ciclo é um conjunto de atividades que possuem relação de ordenação entre as atividades realizadas de uma maneira que satisfaça a relação de pedidos que produzirá o produto desejado.
+Ou seja, é um termo inerente ao processo de desenvolvimento.
+Já o termo desenvolvimento de ‘software’ é, a sequência de atividades que irão produzir um ‘software’.
+
+Portanto, o SDLC (System Development Life Cycle), é uma abstração representativa do esforço de produzir ‘softwares’ com alta qualidade.
+Onde são especificadas as atividades distintas e como essas atividades são organizados em todo o esforço de desenvolvimento de ‘software’.
 
 ====
 
-[verse,http://spec.openapis.org/oas/v3.1.0]
-OPENAPI INITIATIVE
+[verse,Rajendra Ganpatrao Sabale,Dr. A.R. Dani]
+Comparative Study of Prototype Model For Software
+Engineering With System Development Life Cycle - www.iosrjen.org
 
 === Questão 02
 
@@ -58,12 +68,18 @@ Por que é importante utilizar um ciclo de vida para desenvolvimento de software
 
 .Resposta
 ====
-?
+Resumidamente, construir um produto de ‘software’ com as funcionalidades necessárias dentro de um prazo, orçamento especifico e com alta qualidade.
+
+Se um atraso acontece na fase de desenvolvimento, o mercado pode ser conquistado pelo concorrente.
+Se um produto é lançado com um ‘bug’ em um curto período (mais rápido que os concorrentes), pode afetar a reputação da companhia.
+Deve haver uma compensação entre o tempo de desenvolvimento e a qualidade do produto.
+Clientes não esperem um produto livre de ‘bugs’, mas eles esperam um produto amigável que gere resultados satisfatórios.
 
 ====
 
-[verse,http://spec.openapis.org/oas/v3.1.0]
-OPENAPI INITIATIVE
+[verse,Rajendra Ganpatrao Sabale,Dr. A.R. Dani]
+Comparative Study of Prototype Model For Software
+Engineering With System Development Life Cycle - www.iosrjen.org
 
 === Questão 03
 
@@ -71,12 +87,19 @@ Segundo Gu & Lago [1], o que significa dividir o ciclo de vida de desenvolviment
 
 .Resposta
 ====
-?
+Utilizando o exemplo de grandes sistemas, cada atividade pode ser extremamente complexa e, as metodologias e procedimentos são necessários para executá-los de forma eficiente e correta.
+Além disso, cada uma das atividades básicas podem ser tão grandes que precisam ser tratadas em uma única etapa e devem ser divididas em etapas menores.
+
+Por exemplo, o ‘design’ de um grande sistema de ‘software’ é sempre dividido em fases de ‘design’ múltiplo e distintos, começando com um ‘design’ de alto nível especificando apenas os componentes do sistema para um projeto detalhado onde a lógica dos componentes são especificadas.
+E ‘design’ de subcomponentes, onde são distintos e cada um tem as suas particularidades.
+
+Alinhado a isso também é importante considerar o prazo e orçamento para cada atividade, uma vez que o desenvolvimento de um sistema complexo pode haver orçamentos segmentados.
 
 ====
 
-[verse,http://spec.openapis.org/oas/v3.1.0]
-OPENAPI INITIATIVE
+[verse,Rajendra Ganpatrao Sabale,Dr. A.R. Dani]
+Comparative Study of Prototype Model For Software
+Engineering With System Development Life Cycle - www.iosrjen.org
 
 === Questão 04
 
@@ -101,12 +124,23 @@ De acordo com Josuttis (2007) [2], defina serviço básico de dados, serviço b�
 
 .Resposta
 ====
-?
+Serviço básico de dados -> É um serviço atômico, responsável por cumprir uma tarefa simples e específica em um processo de negócio.
+
+Serviço básico de lógica -> Estes representam regras de negócios fundamentais.
+Esses serviços geralmente processam alguns dados de entrada e retornam os resultados correspondentes.
+
+Exemplo de um serviço básico de lógica: definir catálogos de produtos e listas de preços, definir regras para alterar contratos de clientes.
+
+Serviço composto ->  É um serviço complexo, criado a partir da composição de serviços simples ou de outros serviços compostos.
+Esses serviços operam em um nível mais alto do que os serviços básicos, mas ainda são executados em curto prazo e conceitualmente sem estado.
+Para usar um termo de fluxo de trabalho, um serviço composto representa um fluxo médio, que é um fluxo curto de atividades (serviços, neste caso) dentro de um processo de negócios.
+
+Serviço de processo ->  Representa um fluxo de atividades (serviços) de longa duração que pode ser interrompido (por intervenção humana).
 
 ====
 
-[verse,http://spec.openapis.org/oas/v3.1.0]
-OPENAPI INITIATIVE
+[verse,Nicolai M. Josuttis]
+SOA in Practice
 
 == Prática
 
