@@ -390,3 +390,278 @@ image::lv.png[Diagrama BPMN]
 |===
 
 === Arquitetura de microserviços
+
+.Loja Virtual Microserviços
+image::lv-micro.jpg[Loja Virtual Microserviços]
+
+
+==== API
+
+.specification.json
+[source,json]
+----
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Swagger - Loja Virtual"
+  },
+  "host": "virtserver.swaggerhub.com",
+  "basePath": "/ufrj_eng36/trabalho/1.0.0",
+  "tags": [
+    {
+      "name": "Loja virtual",
+      "description": "Loja virtual"
+    },
+    {
+      "name": "Livraria",
+      "description": "Livrarias cadastradas"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/assunto": {
+      "get": {
+        "tags": [
+          "Loja virtual"
+        ],
+        "summary": "Listar livros por assunto.",
+        "operationId": "getLivroPorAssunto",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Consulta as informações do livro na livraria por assunto.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/livro"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/livros": {
+      "get": {
+        "tags": [
+          "Livraria"
+        ],
+        "summary": "Solicitar informações do livro.",
+        "operationId": "getLivro",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Consulta as informações do livro na livraria.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/livro"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/detalhes": {
+      "get": {
+        "tags": [
+          "Loja virtual"
+        ],
+        "summary": "Consultar detalhes do livro.",
+        "operationId": "getLivroDetalhes",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Consulta detalhes do livro na livraria.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/livro"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/consolidar": {
+      "post": {
+        "tags": [
+          "Loja virtual"
+        ],
+        "summary": "Receber informações dos livros.",
+        "operationId": "postLivros",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Consolidar as informações de todas as livrarias para apresentar para o cliente.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/consolidar"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/entrega": {
+      "post": {
+        "tags": [
+          "Livraria"
+        ],
+        "summary": "Calcular entrega.",
+        "operationId": "calcularEntrega",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Calcular o valor efetivo da entrega com base nas informações do cliente.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/entrega"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/pagamento": {
+      "post": {
+        "tags": [
+          "Loja virtual"
+        ],
+        "summary": "Solicitar informações do meio de pagamento e efetua a validação do mesmo.",
+        "operationId": "pagamentoLivro",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Solicitar informações do meio de pagamento e efetua a validação do mesmo.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/entrega"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "livro": {
+      "type": "object",
+      "properties": {
+        "titulo": {
+          "type": "string",
+          "format": "string,"
+        },
+        "ano": {
+          "type": "string",
+          "format": "string,"
+        },
+        "autores": {
+          "type": "string",
+          "format": "string,"
+        },
+        "isbn": {
+          "type": "integer",
+          "format": "int64,"
+        },
+        "editora": {
+          "type": "string",
+          "format": "string,"
+        },
+        "assunto": {
+          "type": "string",
+          "format": "string"
+        }
+      }
+    },
+    "consolidar": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/consolidar_inner"
+      }
+    },
+    "entrega": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "consolidar_inner": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        }
+      }
+    }
+  }
+}
+----
