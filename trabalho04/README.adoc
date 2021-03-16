@@ -111,12 +111,40 @@ Apresente exemplos de tarefas que este stakeholder executa quando assume cada um
 
 .Resposta
 ====
-?
+(a) Provedor de serviço -> Refere-se ao papel de um time de desenvolvimento que produz e publica serviços que já estão prontos para serem executados.
+Provedores de serviço são os donos dos serviços.
+Eles são responsáveis por implementar serviços, assim como realizar a manutenção de serviços.
 
+(b) Broker (ou registro de serviços) -> Um broker atua como um papel intermediário entre um provedor de serviço e um consumidor de serviço.
+A função principal de um broker é prover informação sobre a localização de um serviço que está contida no registro de serviços.
+Um registro de serviços atua como um diretório de serviços publicados, de maneira similar às páginas amarelas para números de telefone.
+Provedores de serviço usam o registro para publicar os seus serviços e os consumidores utilizam para buscar por serviços.
+
+(c) Provedor de aplicação (consumidor de serviço) -> Um provedor de aplicação integra, em uma aplicação, serviços que eventualmente cumprem os requisitos do usuário final.
+
+Um provedor de aplicação também é chamado de consumidor de serviço quando tenta localizar serviços no registro e executa tais serviços.
+Embora estes dois papéis tipicamente são integrados em um só, de propósito fizemos uma distinção entre consumidor de serviço e provedor de aplicação no modelo proposto.
+
+Um consumidor de serviço se foca no desenvolvimento em nível de serviço, tais como descoberta de serviço, negociação de serviço, etc; enquanto um provedor de serviço se concentra no desenvolvimento em nível de aplicação incluindo a integração de serviços na aplicação.
+
+Exemplos de tarefas realizadas pelo stakeholder:
+
+- No papel de provedor de aplicação:
+
+-- Design da aplicação
+
+-- Testes na aplicação
+
+-- Manutenção da aplicação
+
+- No papel de consumidor de serviço:
+
+-- Orquestração/composição de serviços
+
+-- Invocação de serviço
+
+-- Monitoramento de serviço
 ====
-
-[verse,http://spec.openapis.org/oas/v3.1.0]
-OPENAPI INITIATIVE
 
 === Questão 05
 
